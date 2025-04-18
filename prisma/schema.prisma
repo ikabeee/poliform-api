@@ -13,3 +13,36 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id Int @id @default(autoincrement())
+}
+
+model Student {
+  id Int @id @default(autoincrement())
+}
+
+model Group {
+  id Int @id @default(autoincrement())
+}
+
+model GroupAdmin{
+  id Int @id @default(autoincrement())
+}
+
+model Admin{
+  id Int @id @default(autoincrement())
+}
+
+model Document{
+  id Int @id @default(autoincrement())
+}
+
+enum Role {
+  USER
+  STUDENT
+  GROUP
+  GROUP_ADMIN
+  ADMIN
+  DOCUMENT
+}
