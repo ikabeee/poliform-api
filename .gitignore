@@ -1,0 +1,18 @@
+# History files
+.history
+
+# Dependency directories
+node_modules/
+
+# Environment variables
+.env
+
+# Editor directories
+.idea/
+.vscode/
+
+#Build directories
+dist/
+
+# Logs
+logs/
