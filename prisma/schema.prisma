@@ -10,28 +10,51 @@ datasource db {
 
 model User {
   id Int @id @default(autoincrement())
+  name String
+  lastName String
+  email String @unique
+  password String
+  role Role @default(USER)
 }
-
 model Student {
   id Int @id @default(autoincrement())
+  tuition String @unique
+  career String
+  semester Int
+  scholarCycle String
+  shift String
 }
 
+model Admin {
+  id Int @id @default(autoincrement())
+  payroll String @unique
+}
+model Document {
+  id Int @id @default(autoincrement())
+  scholarCycle String
+  createdAt DateTime @default(now())
+}
 model Group {
   id Int @id @default(autoincrement())
 }
 
-model GroupAdmin{
-  id Int @id @default(autoincrement())
+enum documentStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
-model Admin{
-  id Int @id @default(autoincrement())
-}
-
-model Document{
-  id Int @id @default(autoincrement())
+enum documentType {
+  NSS
+  GENERAL_CONDITIONS
+  PRIVACY_POLICY
+  VOUCHER
+  CLASS_SCHEDULE
 }
 
 enum Role {
   USER
+  SUPER_ADMIN
+  STUDENT
+  ADMIN
 }
