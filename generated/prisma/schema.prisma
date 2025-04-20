@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  lastName  String
+  email     String   @unique
+  password  String
+  status    Status   @default(ACTIVE)
+  adminId   Int?     @unique //fk
+  studentId Int?     @unique
+  admin     Admin?   @relation(fields: [adminId], references: [id])
+  student   Student? @relation(fields: [studentId], references: [id])
+  role      Role     @default(USER)
+}
+
+model Student {
+  id           Int        @id @default(autoincrement())
+  tuition      String     @unique
+  career       String
+  semester     Int
+  scholarCycle String
+  shift        String
+  user         User?
+  groupId      Int?
+  group        Group?     @relation(fields: [groupId], references: [id])
+  documents    Document[]
+}
+
+model Admin {
+  id      Int     @id @default(autoincrement())
+  payroll String  @unique
+  user    User?
+  groups  Group[]
+}
+
+model Document {
+  id             Int            @id @default(autoincrement())
+  scholarCycle   String
+  documentType   DocumentType
+  documentStatus DocumentStatus
+  createdAt      DateTime       @default(now())
+  studentId      Int
+  student        Student        @relation(fields: [studentId], references: [id])
+}
+
+model Group {
+  id        Int       @id @default(autoincrement())
+  groupName String    @unique
+  adminId   Int
+  students  Student[]
+  admin     Admin     @relation(fields: [adminId], references: [id])
+}
+
+enum DocumentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum DocumentType {
+  NSS
+  GENERAL_CONDITIONS
+  PRIVACY_POLICY
+  VOUCHER
+  CLASS_SCHEDULE
+}
+
+enum Status {
+  DELETED
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+enum Role {
+  USER
+  SUPER_ADMIN
+  STUDENT
+  ADMIN
+}
