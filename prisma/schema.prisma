@@ -9,47 +9,72 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
-  name String
-  lastName String
-  email String @unique
-  password String
-  role Role @default(USER)
+  id        Int      @id @default(autoincrement())
+  name      String
+  lastName  String
+  email     String   @unique
+  password  String
+  adminId   Int?     @unique
+  studentId Int?     @unique
+  admin     Admin?   @relation(fields: [adminId], references: [id])
+  student   Student? @relation(fields: [studentId], references: [id])
+  role      Role     @default(USER)
 }
+
 model Student {
-  id Int @id @default(autoincrement())
-  tuition String @unique
-  career String
-  semester Int
+  id           Int        @id @default(autoincrement())
+  tuition      String     @unique
+  career       String
+  semester     Int
   scholarCycle String
-  shift String
+  shift        String
+  user         User?
+  documents    Document[]
 }
 
 model Admin {
-  id Int @id @default(autoincrement())
-  payroll String @unique
-}
-model Document {
-  id Int @id @default(autoincrement())
-  scholarCycle String
-  createdAt DateTime @default(now())
-}
-model Group {
-  id Int @id @default(autoincrement())
+  id      Int     @id @default(autoincrement())
+  payroll String  @unique
+  user    User?
+  groups  Group[]
 }
 
-enum documentStatus {
+model Document {
+  id             Int            @id @default(autoincrement())
+  scholarCycle   String
+  documentType   DocumentType
+  documentStatus DocumentStatus
+  createdAt      DateTime       @default(now())
+  studentId      Int
+  student        Student        @relation(fields: [studentId], references: [id])
+}
+
+model Group {
+  id        Int    @id @default(autoincrement())
+  groupName String @unique
+  adminId   Int
+  admin     Admin  @relation(fields: [adminId], references: [id])
+}
+
+enum DocumentStatus {
   PENDING
   APPROVED
   REJECTED
 }
 
-enum documentType {
+enum DocumentType {
   NSS
   GENERAL_CONDITIONS
   PRIVACY_POLICY
   VOUCHER
   CLASS_SCHEDULE
+}
+
+enum Status {
+  DELETED
+  ACTIVE
+  INACTIVE
+  SUSPENDED
 }
 
 enum Role {
